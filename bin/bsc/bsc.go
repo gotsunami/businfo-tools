@@ -8,15 +8,15 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
+	"log"
 	"os"
 	"path"
 	"regexp"
 	"sort"
 	"strconv"
 	"strings"
-
-	"github.com/matm/gomisc"
 )
 
 const (
@@ -388,9 +388,18 @@ func main() {
 		os.Exit(2)
 	}
 
-	data, err := gomisc.ReadLines(os.Args[1])
+	f, err := os.Open(os.Args[1])
 	if err != nil {
-		fail(err.Error())
+		log.Fatal(err)
+	}
+	defer f.Close()
+	scanner := bufio.NewScanner(f)
+	data := make([]string, 0)
+	for scanner.Scan() {
+		data = append(data, scanner.Text())
+	}
+	if err := scanner.Err(); err != nil {
+		log.Fatal(err)
 	}
 
 	// Break content into 2 directions for separate

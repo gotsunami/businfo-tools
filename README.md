@@ -1,6 +1,6 @@
 Toolchain for building lines schedules for the businfo Android application.
 
-Modify the `local.properties` file by setting a path to the bus line schedules:
+Create a `local.properties` file by setting a path to the bus line schedules:
 
     lines.dir=/path/to/businfo-sample-lines
 
