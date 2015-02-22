@@ -33,4 +33,4 @@ deploy-local: mysqldb
 	@./tools/mysql_update.sh local .bpw
 
 clean:
-	rm -f ${SQLDB} ${SQLITEDB} ${CHKSUM} ${LINECOMPILERSRCPATH}/${LINECOMPILER}
+	rm -f ${SQLDB} ${SQLITEDB} ${CHKSUM} ${LINECOMPILERSRCPATH}/${LINECOMPILER} && rm -rf /tmp/pre-filter

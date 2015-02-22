@@ -1,0 +1,4 @@
+*.pyc
+bin/bsc/bsc
+local.properties
+raw/
