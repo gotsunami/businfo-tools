@@ -50,6 +50,7 @@ NETWORKS_FILE = 'networks.json'
 LCOMPILER = "../bin/bsc/bsc" # Line compiler
 #
 CONFIG_FILE = '../local.properties'
+# Absolute path to lines definition
 LINES_SRC_DIR = None
 
 def read_config():
@@ -175,7 +176,7 @@ def makeSQL(networks, sources, out):
         pk += 1
 
     for city in cs:
-        lat, lng = get_gps_coords_from_cache(city[1], GPS_CACHE_FILE)
+        lat, lng = get_gps_coords_from_cache(city[1], os.path.join(LINES_SRC_DIR, GPS_CACHE_FILE))
         out.write("INSERT INTO city VALUES(%d, \"%s\", %d, %d);\n" % (city[0], city[1], lat*10**6, lng*10**6))
         db_city_count += 1
         g_cities.append(city[1])
@@ -456,7 +457,7 @@ def compute_db_checksum(srcdir):
 
     final = hashlib.md5()
     final.update(DBSTRUCT)
-    final.update(get_md5(os.path.join(module_path(), '../filter.map')))
+    final.update(get_md5(os.path.join(LINES_SRC_DIR, 'filter.map')))
     for src in sources:
         final.update(get_md5(src))
     return final.hexdigest()
@@ -707,7 +708,7 @@ where action is one of:
             sources.extend(linedefs)
 
         if options.prefilter:
-            sources = apply_prefilter(g_prefilter, infile)
+            sources = apply_prefilter(os.path.join(LINES_SRC_DIR, g_prefilter), infile)
 
         if action == 'sqlite':
             # Grouping all INSERTs in a single transaction really 
@@ -837,10 +838,10 @@ where action is one of:
     if options.getgps:
         print "Getting GPS coordinates of cities ..."
         print "Using cache file %s ..." % options.gpscache
-        ccities = get_cities_in_cache(options.gpscache) # cities in cache
-        ncities = []                    # not in cache yet
+        ccities = get_cities_in_cache(os.path.join(LINES_SRC_DIR, options.gpscache)) # cities in cache
+        ncities = [] # not in cache yet
 
-        f = open(options.gpscache, 'a')
+        f = open(os.path.join(LINES_SRC_DIR, options.gpscache), 'a')
         for city in g_cities:
             # Self-referencing cities have a SELF_SUFFIX and are ignored
             if city.endswith(SELF_SUFFIX):
@@ -853,7 +854,7 @@ where action is one of:
                 print "N %-25s @%f, %f" % (city, lat, lng)
             else:
                 # City already in the cache
-                lat, lng = get_gps_coords_from_cache(city, options.gpscache)
+                lat, lng = get_gps_coords_from_cache(city, os.path.join(LINES_SRC_DIR, options.gpscache))
                 if lat == 0 and lng == 0:
                     print "Warning: city %s has (0, 0) GPS coordinates!" % city
                 else:
@@ -866,7 +867,7 @@ where action is one of:
 
         ores = os.path.join(TMP_DIR, GPS_RSRC_FILE)
         print "Generating resource file %s ..." % ores
-        f = open(options.gpscache)
+        f = open(os.path.join(LINES_SRC_DIR, options.gpscache))
         data = f.readlines()
         f.close()
 
