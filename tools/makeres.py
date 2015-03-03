@@ -467,10 +467,9 @@ def make_chunks(rawname, chunksize=0):
     Only one chunk if chunksize is null.
     Returns the number of chunks created.
     """
-    size = os.path.getsize(rawname)
     chunk = 1
-
     outname = os.path.join(TMP_DIR, "%s_%d.xml" % (CHUNK_PREFIX, chunk))
+
     print "[%-18s] new chunk file %s..." % ("chunk %02d" % chunk, outname),
     out = open(outname, 'w')
     out.write(XML_HEADER)
