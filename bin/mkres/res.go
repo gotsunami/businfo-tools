@@ -218,9 +218,9 @@ func compute_db_checksum(srcdir string) (string, error) {
 	return "", nil
 }
 
-// make_chunks TBW
+// make_chunks splits the whole SQL dataset into smaller chunks of data.
+// No split occurs if chunkSize is zero.
 func make_chunks(rawName string, chunkSize int) (int, error) {
-	chunk := 1
 	createChunk := func(chunkCount int) (*os.File, error) {
 		outname := path.Join(TMP_DIR, fmt.Sprintf("%s_%d.xml", CHUNK_PREFIX, chunkCount))
 		fmt.Printf("[%-18s] new chunk file %s... ", fmt.Sprintf("chunk %02d", chunkCount), outname)
@@ -238,6 +238,7 @@ func make_chunks(rawName string, chunkSize int) (int, error) {
 		return out, nil
 	}
 
+	chunk := 1
 	out, err := createChunk(chunk)
 	if err != nil {
 		return 0, err
@@ -311,6 +312,31 @@ func make_chunks(rawName string, chunkSize int) (int, error) {
 	fmt.Println("done.")
 
 	return chunk, nil
+}
+
+// check_up_to_date checks if the source files are in sync with the current SQL and DB.
+// Exits gracefully if nothing to do at all.
+func check_up_to_date(chksum string) {
+}
+
+type BusNetwork struct {
+}
+
+// init_networks finds available bus networks. networks.json is a static file edited
+// by hand. Returns a list of available networks ressources.
+func init_networks(srcdir string) []BusNetwork {
+	return nil
+}
+
+// bsc_compile runs the bsc compiler on *.in bus lines definitions. Returns the list of
+// available bus networks.
+func bsc_compile(srcdir string) []BusNetwork {
+	return init_networks(srcdir)
+}
+
+// apply_prefilter applies any substitutions by using regexps defined in the prefilter
+// file.
+func apply_prefilter(prefilter, infile string) {
 }
 
 func main() {
