@@ -1,10 +1,10 @@
 
-SQLDB=/tmp/htdb.sql
+SQLDB=/tmp/businfo/htdb.sql
 DBOPTS=--gps --gps-cache=gps.csv --pre-filter=filter.map
 MAKERES=./tools/makeres.py
 SQLITEDB=~/ht.sqlite
 SQLITE=sqlite3
-CHKSUM=/tmp/.checksum
+CHKSUM=/tmp/businfo/.checksum
 LINECOMPILER=bsc
 LINECOMPILERSRCPATH=bin/${LINECOMPILER}
 LINECOMPILERSRC=${LINECOMPILERSRCPATH}/${LINECOMPILER}.go
@@ -33,4 +33,4 @@ deploy-local: mysqldb
 	@./tools/mysql_update.sh local .bpw
 
 clean:
-	rm -f ${SQLDB} ${SQLITEDB} ${CHKSUM} ${LINECOMPILERSRCPATH}/${LINECOMPILER} && rm -rf /tmp/pre-filter
+	rm -rf /tmp/businfo && rm -f ${LINECOMPILERSRCPATH}/${LINECOMPILER}

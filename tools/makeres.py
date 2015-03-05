@@ -29,7 +29,7 @@ dfltCirculationPolicy = DFLT_CIRC_POLICY
 XML_HEADER = """<?xml version="1.0" encoding="utf-8"?>
 <!-- GENERATED AUTOMATICALLY BY THE makeres.py SCRIPT. DO NOT MODIFY! -->
 """
-TMP_DIR = tempfile.gettempdir()
+TMP_DIR = os.path.join(tempfile.gettempdir(), "businfo")
 #
 FETCH_GPS_URL = """http://maps.googleapis.com/maps/api/geocode/json?address=%s&sensor=false"""
 GPS_CACHE_FILE = 'gps.csv'
@@ -666,6 +666,8 @@ where action is one of:
         parser.print_usage()
         sys.exit(2)
 
+    if not os.path.exists(TMP_DIR):
+        os.mkdir(TMP_DIR)
 
     DEBUG = options.debug
     action, infile = args
