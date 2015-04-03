@@ -52,6 +52,7 @@ LCOMPILER = "../bin/bsc/bsc" # Line compiler
 CONFIG_FILE = '../local.properties'
 # Absolute path to lines definition
 LINES_SRC_DIR = None
+UPDATE_TARBALL = "update.tar.bz2"
 
 def read_config():
     global LINES_SRC_DIR
@@ -442,7 +443,7 @@ def compute_db_checksum(srcdir):
     It's supposed to be a portable solution between different Python 
     versions. Indeed, different Python versions could handle ordering 
     of elements in Set() in different ways, thus making issues when 
-    creating cheksums against the generated .sql or .xml file. It appears 
+    creating checksums against the generated .sql or .xml file. It appears
     to be better to operate directly on source files.
 
     Furthermore, the computed checksum is used to check if database 
@@ -816,6 +817,16 @@ where action is one of:
                         else:
                             print "[%-18s] database NOT updated" % 'IDEM'
                         print "[%-18s] done." % 'dbcompare'
+
+                # Make a tarball of schedules that can be served over HTTP to upgrade the Android client
+                import tarfile
+                with tarfile.open(os.path.join(TMP_DIR, UPDATE_TARBALL), 'w:bz2') as tar:
+                    chunkfiles = glob.glob(os.path.join(TMP_DIR, "%s_*.xml" % CHUNK_PREFIX))
+                    for name in chunkfiles:
+                        tar.add(name, os.path.basename(name))
+                    tar.add(chkname, os.path.basename(chkname))
+                print "[%-18s] wrote bzip2 tarball" % 'network update'
+
         elif action == 'mysql':
             outname = os.path.join(TMP_DIR, RAW_DB_FILE)
             print "[%-18s] raw SQL content (for MySQL)..." % outname,
